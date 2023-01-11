@@ -1,7 +1,7 @@
 import Items from "./Item";
 
 export default interface IPoint {
-  id: number,
+  id?: number,
   image: string,
   name: string,
   email: string,

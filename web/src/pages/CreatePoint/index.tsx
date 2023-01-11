@@ -5,6 +5,8 @@ import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { Link, useNavigate } from "react-router-dom";
 import './CreatePoint.css';
 
+import Dropzone from "../../components/Dropzone";
+
 import { LeafletMouseEvent } from "leaflet";
 import logo from '../../assets/logo.svg';
 import api from "../../services/api";
@@ -33,6 +35,8 @@ const CreatePoint = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   const [UFs, setUFs] = useState<string[]>([]);
   const [selectedUf, setSelectedUf] = useState<string>("0");
@@ -133,15 +137,19 @@ const CreatePoint = () => {
     const { name, email, whatsapp } = formData;
     const [ latitude, longitude ] = selectedPosition;
 
-    const dataPoint = {
-      name, 
-      email, 
-      whatsapp,
-      uf: selectedUf,
-      city: selectedCity,
-      latitude,
-      longitude,
-      items: selectedItems,
+    const dataPoint = new FormData();
+
+    dataPoint.append("name", name)
+    dataPoint.append("email", email)
+    dataPoint.append("whatsapp", whatsapp)
+    dataPoint.append("uf", selectedUf)
+    dataPoint.append("city", selectedCity)
+    dataPoint.append("latitude", String(latitude))
+    dataPoint.append("longitude", String(longitude))
+    dataPoint.append("items", selectedItems.join(","));
+    
+    if (selectedFile) {
+      dataPoint.append("image", selectedFile);
     }
 
     await api.post('points', dataPoint);
@@ -179,6 +187,10 @@ const CreatePoint = () => {
           <legend>
             <h2>Dados</h2>
           </legend>
+
+          <div className="field">
+            <Dropzone onFileUploaded={setSelectedFile} />
+          </div>
 
           <div className="field">
               <label htmlFor="name">Nome da entidade</label>

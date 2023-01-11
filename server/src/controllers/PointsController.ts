@@ -1,5 +1,17 @@
 import { json, Request, Response } from "express";
 import knex from "../database/conn";
+import IPoint from "../interfaces/Point";
+
+interface IPointRequest {
+  name: string; 
+  email: string;
+  whatsapp: string;
+  latitude: number;
+  longitude: number;
+  city: string;
+  uf: string;
+  items: string;
+}
 
 export class PointsController {
 
@@ -17,7 +29,16 @@ export class PointsController {
       .where('uf', String(uf))
       .distinct()
       .select('points.*')
-    return res.json(points);
+
+      const serializedPoints = points.map(point => {
+        return {
+          ...points,
+          image_url: `http://localhost:3333/uploads/${point.image}`
+        }
+      });
+  
+
+    return res.json(serializedPoints);
   }
 
   async create(req: Request, res: Response) {
@@ -30,19 +51,25 @@ export class PointsController {
       city,
       uf,
       items
-    } = req.body;
+    } = req.body as IPointRequest;
+
+    const image = req.file?.filename;
+
+    if (!image) {
+      return res.status(400).json({ message: 'Invalid image' });
+    }
   
     const trx = await knex.transaction();
 
-    const point = {
-      image: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60',
+    const point: IPoint = {
+      image,
       name, 
       email, 
       whatsapp,
       latitude,
       longitude,
       city,
-      uf,
+      uf
     }
   
     const insertIds = await trx('points')
@@ -50,7 +77,9 @@ export class PointsController {
 
     const point_id = insertIds[0];
 
-    const pointItems = items.map((item_id: number) => {
+    const itemsArray = items.split(',').map((item) => Number(item.trim()));
+    
+    const pointItems = itemsArray.map((item_id: number) => {
       return {
         point_id, 
         item_id
@@ -79,12 +108,17 @@ export class PointsController {
       .join('point_items', 'items.id', '=', 'point_items.item_id')
       .where('point_items.point_id', id);
 
+    const serializedPoint = {
+      ...point,
+      image_url: `http://localhost:3333/uploads/${point.image}` 
+    };
+
     const itemsTitle = items.map(item => {
       return { title: item.title }
     })
 
     return res.json({
-      point,
+      point: serializedPoint,
       items: itemsTitle
     });
   }

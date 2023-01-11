@@ -22,6 +22,7 @@ interface IData {
   point: {
     name: string;
     image: string;
+    image_url: string;
     email: string;
     whatsapp: string,
     city: string;
@@ -38,7 +39,7 @@ const Detail = () => {
   const staticData = {
     point: {
       name: "Mercado Dantas",
-      image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60",
+      image_url: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60",
       email: "luizvictor1231@gmail.com",
       whatsapp: "92993495014",
       city: "Manaus",
@@ -102,7 +103,7 @@ const Detail = () => {
         </TouchableOpacity>
 
         <Image style={styles.pointImage} source={{
-          uri: staticData.point.image
+          uri: staticData.point.image_url
         }} />
 
         <Text style={styles.pointName}>{staticData.point.name}</Text>

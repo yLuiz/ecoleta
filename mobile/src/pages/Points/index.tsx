@@ -22,6 +22,7 @@ interface IPoint {
   id: number;
   name: string;
   image: string;
+  image_url: string;
   latitude: number;
   longitude: number;
 }
@@ -45,7 +46,8 @@ const Points = () => {
   const staticPoint: IPoint = {
     id: 1,
     name: 'Digiboard',
-    image: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60',
+    image: 'photo-1604719312566-8912e9227c6a',
+    image_url: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60',
     latitude: -3.123188, 
     longitude: -59.979846,
   }
@@ -207,7 +209,7 @@ const Points = () => {
               }}>
               <View style={styles.mapMarkerContainer}>
                 <Image style={styles.mapMarkerImage} source={{
-                  uri: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=60"
+                  uri: staticPoint.image_url
                 }}/>
                 <Text style={styles.mapMarkerTitle}>{staticPoint.name}</Text>
               </View>
