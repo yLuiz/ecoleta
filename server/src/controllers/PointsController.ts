@@ -70,10 +70,10 @@ export class PointsController {
       longitude,
       city,
       uf
-    }
+    };
   
     const insertIds = await trx('points')
-      .insert(point)
+      .insert(point);
 
     const point_id = insertIds[0];
 
@@ -83,11 +83,11 @@ export class PointsController {
       return {
         point_id, 
         item_id
-      }
-    })
+      };
+    });
   
     await trx('point_items')
-      .insert(pointItems)
+      .insert(pointItems);
 
     await trx.commit();
   
@@ -114,8 +114,8 @@ export class PointsController {
     };
 
     const itemsTitle = items.map(item => {
-      return { title: item.title }
-    })
+      return { title: item.title };
+    });
 
     return res.json({
       point: serializedPoint,
@@ -124,7 +124,7 @@ export class PointsController {
   }
 
   async delete(req: Request, res: Response) {
-    const { id } = req.params
+    const { id } = req.params;
 
     const trx = await knex.transaction();
 
