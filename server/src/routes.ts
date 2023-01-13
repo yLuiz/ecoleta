@@ -31,6 +31,9 @@ routes.post('/points',
       uf: Joi.string().required().max(2),
       items: Joi.string().required(), // Usar regex para validar a separação por vírgula.
     })
+  },
+  {
+    abortEarly: false
   }),
   pointsController.create
 );
